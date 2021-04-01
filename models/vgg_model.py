@@ -98,13 +98,12 @@ class VGGFeatureExtractor(nn.Module):
             if idx > max_idx:
                 max_idx = idx
 
-        state_dict = torch.load('/home/liyinglu/newData/programs/referenceSR_1026_hflip/models/vgg19-dcbb9e9d.pth')
-        vgg19 = vgg.vgg19(pretrained=False)
-        vgg19.load_state_dict(state_dict)
-        features = vgg19.features[:max_idx + 1]
+        # state_dict = torch.load('/home/liyinglu/newData/programs/referenceSR_1026_hflip/models/vgg19-dcbb9e9d.pth')
+        # vgg19 = vgg.vgg19(pretrained=False)
+        # vgg19.load_state_dict(state_dict)
+        # features = vgg19.features[:max_idx + 1]
 
-        # features = getattr(vgg,
-        #                    vgg_type)(pretrained=True).features[:max_idx + 1]
+        features = getattr(vgg, vgg_type)(pretrained=True).features[:max_idx + 1]
 
         modified_net = OrderedDict()
         for k, v in zip(self.names, features):
