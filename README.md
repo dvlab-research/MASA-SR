@@ -22,7 +22,7 @@ Official PyTorch implementation of our CVPR2021 paper [MASA-SR: Matching Acceler
 ## Get Started
 1. Clone this repo
     ```
-    git clone https://github.com/SkyeLu/MASA-SR.git
+    git clone https://github.com/Jia-Research-Lab/MASA-SR.git
     cd MASA-SR
     ```
 1. Download the dataset. Modify the argument `--data_root` in `test.py` and `train.py` according to your data path.
