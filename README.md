@@ -29,7 +29,7 @@ Official PyTorch implementation of our CVPR2021 paper [MASA-SR: Matching Acceler
 ### Evaluation
 1. Download the pre-trained models and place them into the `pretrained_weights/` folder
 
-    * Pre-trained models can be downloaded from [onedrive](https://bit.ly/3dqo1Mk)
+    * Pre-trained models can be downloaded from [Google Drive](https://drive.google.com/drive/folders/1O9Y4UK1PFoFKOsYTQqcQJCA_VvBWp29N?usp=sharing)
         * *masa_rec.pth*: trained with only reconstruction loss
         * *masa.pth*: trained with all losses
 1. Run test.sh. See more details in test.sh (if you are using cpu, please add `--gpu_ids -1` in the command)
