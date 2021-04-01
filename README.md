@@ -32,7 +32,7 @@ Official PyTorch implementation of our CVPR2021 paper [MASA-SR: Matching Acceler
     * Pre-trained models can be downloaded from [onedrive](https://bit.ly/3dqo1Mk)
         * *masa_rec.pth*: trained with only reconstruction loss
         * *masa.pth*: trained with all losses
-1. Run test.sh. See more details in test.sh
+1. Run test.sh. See more details in test.sh (if you are using cpu, please add `--gpu_ids -1` in the command)
     ```
     sh test.sh
     ```
