@@ -38,7 +38,7 @@ Official PyTorch implementation of our CVPR2021 paper [MASA-SR: Matching Acceler
     ```
 1. The testing results are in the `test_results/` folder
 
-## Train
+## Training
 1. First train masa-rec only with the reconstruction loss.
     ```
     python train.py --use_tb_logger --data_augmentation --max_iter 160 --loss_l1 --name train_masa_rec
