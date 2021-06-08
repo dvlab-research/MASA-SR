@@ -49,13 +49,13 @@ Official PyTorch implementation of our CVPR2021 paper [MASA-SR: Matching Acceler
     ```
 1. The training results are in the `weights/` folder
 
-### Update
+## Update
 [2021/06/08] Fix a bug in evaluation. Retrain the models and update the given checkpoints, whose PSNR have a slight difference with those reported in the paper (±0.03dB).
 
-### Acknowledgement
+## Acknowledgement
 We borrow some codes from [TTSR](https://github.com/researchmm/TTSR) and [BasicSR](https://github.com/xinntao/BasicSR). We thank the authors for their great work.
 
-### Citation
+## Citation
 
 Please consider citing our paper in your publications if it is useful for your research.
 ```
