@@ -158,10 +158,6 @@ class Trainer(object):
 
         return batch_samples
 
-    def forward(self, blur_image):
-        deblur_image = self.net(blur_image)
-        return deblur_image
-
     def train(self):
         if self.args.rank <= 0:
             logging.info('training on  ...' + self.args.dataset)
@@ -175,7 +171,7 @@ class Trainer(object):
                 tb_logger = SummaryWriter(log_dir='tb_logger/' + self.args.name)
 
         self.best_psnr = 0
-        self.augmentation = False
+        self.augmentation = False  # disenable data augmentation to warm up the encoder
         for i in range(self.args.start_iter, self.args.max_iter):
             self.scheduler.step()
             logging.info('current_lr: %f' % (self.optimizer_G.param_groups[0]['lr']))
@@ -284,7 +280,6 @@ class Trainer(object):
                             self.augmentation = self.args.data_augmentation
                     self.args.phase = 'train'
 
-
         ## end of training
         if self.args.rank <= 0:
             tb_logger.close()
@@ -326,6 +321,8 @@ class Trainer(object):
                 to_y = True
                 output_img = calculate_PSNR_SSIM.tensor2img(output)
                 gt = calculate_PSNR_SSIM.tensor2img(HR)
+                output_img = output_img[:, :, [2, 1, 0]]
+                gt = gt[:, :, [2, 1, 0]]
                 output_img = output_img.astype(np.float32) / 255.0
                 gt = gt.astype(np.float32) / 255.0
 
@@ -382,6 +379,8 @@ class Trainer(object):
                 to_y = True
                 output_img = calculate_PSNR_SSIM.tensor2img(output)
                 gt = calculate_PSNR_SSIM.tensor2img(HR)
+                output_img = output_img[:, :, [2, 1, 0]]
+                gt = gt[:, :, [2, 1, 0]]
                 output_img = output_img.astype(np.float32) / 255.0
                 gt = gt.astype(np.float32) / 255.0
 
@@ -396,9 +395,6 @@ class Trainer(object):
 
         PSNR = np.mean(PSNR)
         SSIM = np.mean(SSIM)
-
-        del batch_samples
-        torch.cuda.empty_cache()
 
         return PSNR, SSIM
 

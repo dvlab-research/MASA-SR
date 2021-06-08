@@ -9,55 +9,6 @@ import numpy as np
 import cv2
 import glob
 
-def main():
-    # Configurations
-
-    # GT - Ground-truth;
-    # Gen: Generated / Restored / Recovered images
-
-
-
-
-    folder_GT = '/dockerdata/liyinglu/datasets/GoPro/test/'
-    folder_Gen = '/cephfs/person/liyinglu/sts_multi_gpu/generated/generated_imgs'
-
-    suffix = ''  # suffix for Gen images
-    test_Y = False  # True: test Y channel only; False: test RGB channels
-
-    PSNR_all = []
-    SSIM_all = []
-    img_list = sorted(glob.glob(folder_GT + '/*'))
-
-    if test_Y:
-        print('Testing Y channel.')
-    else:
-        print('Testing RGB channels.')
-
-    for i, img_path in enumerate(img_list):
-        base_name = os.path.splitext(os.path.basename(img_path))[0]
-        im_GT = cv2.imread(img_path) / 255.
-        im_Gen = cv2.imread(os.path.join(folder_Gen, base_name + '.jpg')) / 255.
-
-        if test_Y and im_GT.shape[2] == 3:  # evaluate on Y channel in YCbCr color space
-            im_GT_in = bgr2ycbcr(im_GT)
-            im_Gen_in = bgr2ycbcr(im_Gen)
-        else:
-            im_GT_in = im_GT
-            im_Gen_in = im_Gen
-
-
-        # calculate PSNR and SSIM
-        PSNR = calculate_psnr(im_GT_in * 255, im_Gen_in * 255)
-
-        SSIM = calculate_ssim(im_GT_in * 255, im_Gen_in * 255)
-        print('{:3d} - {:25}. \tPSNR: {:.6f} dB, \tSSIM: {:.6f}'.format(
-            i + 1, base_name, PSNR, SSIM))
-        PSNR_all.append(PSNR)
-        SSIM_all.append(SSIM)
-    print('Average: PSNR: {:.6f} dB, SSIM: {:.6f}'.format(
-        sum(PSNR_all) / len(PSNR_all),
-        sum(SSIM_all) / len(SSIM_all)))
-
 
 def tensor2img(tensor, out_type=np.uint8, min_max=(0, 1)):
     # 4D: grid (B, C, H, W), 3D: (C, H, W), 2D: (H, W)
@@ -83,43 +34,6 @@ def tensor2img(tensor, out_type=np.uint8, min_max=(0, 1)):
 
     return img_np.astype(out_type)
 
-
-def get_metrics_from_tensor(tensor_gt, tensor_gen, test_Y=False):
-    #if test_Y:
-    #    print('Testing Y channel.')
-    #else:
-    #    print('Testing RGB channels.')
-    im_gt = ((tensor_gt).data.cpu().numpy()).transpose((1, 2, 0))
-    im_gen = ((tensor_gen).data.cpu().numpy()).transpose((1, 2, 0))
-
-    im_gt = (im_gt * 255).round() / 255.
-    im_gen = (im_gen * 255).round() / 255.
-
-    if test_Y and im_gt.shape[2] == 3:  # evaluate on Y channel in YCbCr color space
-        im_gt_in = bgr2ycbcr(im_gt)
-        im_gen_in = bgr2ycbcr(im_gen)
-    else:
-        im_gt_in = im_gt
-        im_gen_in = im_gen
-
-    PSNR = calculate_psnr((im_gt_in * 255), (im_gen_in * 255))
-    SSIM = calculate_ssim((im_gt_in * 255), (im_gen_in * 255))
-    return PSNR, SSIM
-
-def get_metrics_from_path(path_gt, path_gen, test_Y=False):
-    im_gt = cv2.imread(path_gt) / 255.
-    im_gen = cv2.imread(path_gen) / 255.
-    
-    if test_Y and im_gt.shape[2] == 3:  # evaluate on Y channel in YCbCr color space
-        im_gt_in = bgr2ycbcr(im_gt)
-        im_gen_in = bgr2ycbcr(im_gen)
-    else:
-        im_gt_in = im_gt
-        im_gen_in = im_gen
-
-    PSNR = calculate_psnr(im_gt_in * 255, im_gen_in * 255)
-    SSIM = calculate_ssim(im_gt_in * 255, im_gen_in * 255)
-    return PSNR, SSIM
 
 def calculate_psnr(img1, img2):
     # img1 and img2 have range [0, 255]
@@ -203,6 +117,3 @@ def bgr2ycbcr(img, only_y=True):
 
 
 
-
-if __name__ == '__main__':
-    main()
